@@ -1,6 +1,6 @@
 # 💵 Cryptocurrency Tracker API Backend 
 > [!NOTE]
-> The site is live!<br/> Visit [here](https://koinx-backend.up.railway.app/api/stats?coin=bitcoin) for Live Stats and [here](https://koinx-backend.up.railway.app/api/deviation?coin=bitcoin) for Deviations
+> The site is live!<br/> Visit [here](https://koinx-backend.up.railway.app/) for Live Stats and for Deviations!!
 
 ![Node.js](https://img.shields.io/badge/Node.js-v16+-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-blue)
@@ -21,6 +21,7 @@ A robust backend application for tracking and analyzing cryptocurrency data. Des
 - 💾 MongoDB Integration for Persistent Storage
 
 ![image](https://github.com/user-attachments/assets/8d1e86c8-a6c1-4b07-8efd-c6ae8f0e457f)
+
 
 ## ✨ Getting Started
 
