@@ -12,6 +12,7 @@ A robust backend application for tracking and analyzing cryptocurrency data. Des
 - [Node.js](https://nodejs.org/)
 - [MongoDB Atlas](https://www.mongodb.com/atlas)
 - [node-cron](https://www.npmjs.com/package/node-cron)
+- [CoinGecko](https://docs.coingecko.com/v3.0.1/reference/)
 
 ## ✨ Features
 - 📊 Real-time Cryptocurrency Data Fetching
@@ -24,7 +25,8 @@ A robust backend application for tracking and analyzing cryptocurrency data. Des
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v16+)
 - [MongoDB Atlas](https://www.mongodb.com/atlas) (or local MongoDB)
-- [npm](https://www.npmjs.com/)
+- [npm](https://www.npmjs.com/)- 
+- [CoinGecko API](https://docs.coingecko.com/v3.0.1/reference/)
 
 ### Installation
 
