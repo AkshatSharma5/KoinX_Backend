@@ -157,9 +157,23 @@ const showIntroPage = (req, res) => {
         box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
         animation: underlineBounce 4s ease-in-out infinite;
       }
+        canvas#particle-canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+        }
+
+        .container {
+          position: relative;
+          z-index: 1;
+        }
       </style>
     </head>
     <body>
+    <canvas id="particle-canvas"></canvas>
       <div class="container">
         <h1>Welcome to Crypto Tracker</h1>
         <p>Track real-time cryptocurrency statistics and deviations</p>
@@ -172,7 +186,7 @@ const showIntroPage = (req, res) => {
       </div>
       <div>
       <button class="btn" onclick="fetchStats()">Get Stats</button>
-      <button class="btn" onclick="fetchDev()">Get Deviation</button>
+      <button class="btn" onclick="fetchDeviation()">Get Deviation</button>
       </div>
       
       <p id="output"></p>
@@ -181,6 +195,94 @@ const showIntroPage = (req, res) => {
         &copy; 2025 Crypto Tracker | All rights reserved.
       </footer>
       <script>
+        document.addEventListener('DOMContentLoaded', function() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  
+  // Set canvas size
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  
+  // Particle properties
+  const particles = [];
+  const particleCount = 100;
+  
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = Math.random() * 0.2 - 0.1;
+      this.vy = Math.random() * 0.2 - 0.1;
+      this.size = Math.random() * 2;
+    }
+    
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      
+      if (this.x < 0) this.x = canvas.width;
+      if (this.x > canvas.width) this.x = 0;
+      if (this.y < 0) this.y = canvas.height;
+      if (this.y > canvas.height) this.y = 0;
+    }
+    
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.fill();
+    }
+  }
+  
+  // Create particles
+  for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+  }
+  
+  // Draw lines between nearby particles
+  function drawLines(p1, p2) {
+    const dx = p1.x - p2.x;
+    const dy = p1.y - p2.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    if (distance < 100) {
+      ctx.beginPath();
+      ctx.strokeStyle = \`rgba(255, 255, 255, \${0.2 * (1 - distance / 100)})\`;
+      ctx.lineWidth = 0.5;
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+    }
+  }
+  
+  // Animation loop
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
+      
+      particles.forEach(otherParticle => {
+        if (particle !== otherParticle) {
+          drawLines(particle, otherParticle);
+        }
+      });
+    });
+    
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+});
+
+
+
         function formatMarketCap(value) {
           const n = numeral(value);
           if (value >= 1e12) return n.format('$0.00a').toUpperCase(); // Trillion
@@ -195,6 +297,17 @@ const showIntroPage = (req, res) => {
 
         function formatPrice(value) {
           return numeral(value).format('$0,0.00');
+        }
+        function fetchDeviation(){
+          const currency = document.getElementById('currencies').value;
+          fetch('/api/deviation?coin=' + currency)
+            .then(response => response.json())
+            .then(data => {
+              alert(\` 💵 The deviation of \${currency} is \${data.deviation} 💵 \`);
+            })
+            .catch(err => {
+              alert('Error fetching deviation: ' + err.message);
+            });
         }
 
         function fetchStats() {
@@ -231,6 +344,7 @@ const showIntroPage = (req, res) => {
         }
       </script>
     </body>
+    
     </html>
   `);
 };
