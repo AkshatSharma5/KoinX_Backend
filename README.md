@@ -73,13 +73,14 @@ The application uses `node-cron` to fetch cryptocurrency data every **2 hours**:
   curl "http://localhost:3000/api/deviation?coin=bitcoin"
   ```
 - **Response:**
-  ```json
+```bash
 {
   "price": 94281,
   "marketCap": 1866010142291.8635,
   "24hChange": -0.5380935379881129
 }
-    ```
+```
+
 ### 2. Get Standard Deviation
 - **URL:** `/api/deviation`
 - **Method:** `GET`
