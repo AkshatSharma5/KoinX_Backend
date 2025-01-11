@@ -1,4 +1,4 @@
-# 💵 Cryptocurrency Tracker API Backend 🪙
+# 💵 Cryptocurrency Tracker API Backend 
 > [!NOTE]
 > The site is live!<br/> Visit [here](https://koinx-backend.up.railway.app/api/stats?coin=bitcoin) for Live Stats and [here](https://koinx-backend.up.railway.app/api/deviation?coin=bitcoin) for Deviations
 
