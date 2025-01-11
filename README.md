@@ -20,8 +20,7 @@ A robust backend application for tracking and analyzing cryptocurrency data. Des
 - 🛠️ Robust API Endpoints for Standard Deviation, Historical Prices, etc.
 - 💾 MongoDB Integration for Persistent Storage
 
-![image](https://github.com/user-attachments/assets/a3f7dbcc-dd5a-4182-8022-f28923c15f4a)
-
+![image](https://github.com/user-attachments/assets/8d1e86c8-a6c1-4b07-8efd-c6ae8f0e457f)
 
 ## ✨ Getting Started
 
