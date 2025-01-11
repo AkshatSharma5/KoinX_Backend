@@ -1,6 +1,6 @@
 # 💵 Cryptocurrency Tracker API Backend 
 > [!NOTE]
-> The site is live!<br/> Visit [here](https://koinx-backend.up.railway.app/) for Live Stats and for Deviations!!
+> **The site is live!<br/> Visit [here](https://koinx-backend.up.railway.app/) for Live Stats and for Deviations!!**
 
 ![Node.js](https://img.shields.io/badge/Node.js-v16+-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-blue)
