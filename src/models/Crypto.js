@@ -27,4 +27,3 @@ const CryptoSchema = new mongoose.Schema({
 module.exports = mongoose.model('Crypto', CryptoSchema);
 
 
-
