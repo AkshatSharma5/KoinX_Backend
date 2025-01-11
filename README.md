@@ -8,6 +8,11 @@
 
 A robust backend application for tracking and analyzing cryptocurrency data. Designed with Node.js and MongoDB, this server-side application supports scheduled updates, statistical computations, and more!
 
+## ⚙️ Tech Stacks
+- [Node.js](https://nodejs.org/)
+- [MongoDB Atlas](https://www.mongodb.com/atlas)
+- [node-cron](https://www.npmjs.com/package/node-cron)
+
 ## ✨ Features
 - 📊 Real-time Cryptocurrency Data Fetching
 - 🕒 Scheduled Data Updates (Every 2 hours using `node-cron`)
@@ -50,7 +55,7 @@ npm start
 **There are 2 endpoints:**
 - http://localhost:3000/api/stats?coin=NAME_OF_COIN
 - http://localhost:3000/api/deviation?coin=NAME_OF_COIN
-(NAME_OF_COIN = `bitcoin`, `ethereum`, `matt` only for now)
+- (NAME_OF_COIN = `bitcoin`, `ethereum`, `matt` only for now)
 
 ## 🔄 Cron Job
 The application uses `node-cron` to fetch cryptocurrency data every **2 hours**:
@@ -58,7 +63,7 @@ The application uses `node-cron` to fetch cryptocurrency data every **2 hours**:
 
 ## 📂 API Endpoints
 
-### 2. Get Live Stats 🌍
+### 1. Get Live Stats 🌍
 - **URL:** `/api/stats`
 - **Method:** `GET`
 - **Query Parameters:**
@@ -74,7 +79,7 @@ The application uses `node-cron` to fetch cryptocurrency data every **2 hours**:
   "marketCap": 1866010142291.8635,
   "24hChange": -0.5380935379881129
 }
-```
+    ```
 ### 2. Get Standard Deviation
 - **URL:** `/api/deviation`
 - **Method:** `GET`
@@ -91,7 +96,7 @@ The application uses `node-cron` to fetch cryptocurrency data every **2 hours**:
   }
   ```
 
-## 🛡️ Caution
+#### 🛡️ Caution
 > Ensure your MongoDB database is properly secured with authentication and IP **whitelisting** to prevent unauthorized access.
 
 ## 📈 Additional Features (Coming Soon!)
@@ -99,7 +104,7 @@ The application uses `node-cron` to fetch cryptocurrency data every **2 hours**:
 - ✅ GraphQL Support
 - ✅ Advanced Statistical Analysis (e.g., Moving Averages, Volatility)
 
-## 🌐 Deployment : The site is deployed on **Railway** which can be accessed by  aforementioned links!
+#### 🌐 Deployment : The site is deployed on **Railway** which can be accessed by  aforementioned links!
 
 ## 🤝 Contributing
 1. Fork the project.
@@ -111,6 +116,6 @@ The application uses `node-cron` to fetch cryptocurrency data every **2 hours**:
 ## 📜 License
 This project is licensed under the MIT License.
 
+**If you have any suggestions or complaints regarding the project, feel free to contact me at akshatgopal70@gmail.com anytime!**
 
-## 💡 Note
-Want to add new coins? Extend the `fetchCryptoData` function with additional APIs or endpoints!
+Good Day!✨
