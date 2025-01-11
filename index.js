@@ -8,10 +8,11 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 // Schedule the fetchCryptoData function
-cron.schedule('0 */2 * * *', async () => {
-  console.log('Running scheduled job to fetch crypto data.');
-  await fetchCryptoData();
-});
+// cron.schedule('0 */2 * * *', async () => {
+//   console.log('Running scheduled job to fetch crypto data.');
+//   await ;
+// });
+fetchCryptoData()
 console.log('Scheduled job to fetch crypto data every 2 hours.');
 
 app.listen(PORT, () => {
