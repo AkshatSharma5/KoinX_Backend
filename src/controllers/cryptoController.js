@@ -21,8 +21,7 @@ const showIntroPage = async (req, res) => {
 
     // For each coin, try to calculate deviation from DB records
     for (const coin of coins) {
-      // For coins like "matt" that may not exist on CoinGecko, use lowercase name match.
-      const coinName = coin.id; // CoinGecko returns ids like "bitcoin", "ethereum", etc.
+      const coinName = coin.id;
       const records = await Crypto.find({ coin: coinName }).sort({ timestamp: -1 }).limit(100);
       if (records && records.length > 0) {
         const prices = records.map(record => record.price);
@@ -32,39 +31,74 @@ const showIntroPage = async (req, res) => {
       }
     }
 
-    // Render the homepage using the fetched coin data
+    // Render the homepage using the fetched coin data with a modern header & footer
     res.send(`
       <!DOCTYPE html>
       <html lang="en">
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Crypto Dashboard</title>
+        <title>KryptoX</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
         <style>
+          /* Global Styles */
+          * {
+            box-sizing: border-box;
+          }
           body {
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #000000, #4b0082);
-            font-family: "Poppins", sans-serif;
+            font-family: 'Poppins', sans-serif;
             color: #fff;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
           }
+          a {
+            color: #fff;
+            text-decoration: none;
+          }
+          /* Header */
+          header {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          }
+          header .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+          }
+          nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+          }
+          nav ul li {
+            font-size: 1rem;
+          }
+          /* Main Content */
           .container {
+            flex: 1;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+            margin: 2rem auto;
+            padding: 0 2rem;
           }
-          .header {
+          .intro {
             text-align: center;
             margin-bottom: 2rem;
           }
-          .header h1 {
+          .intro h1 {
             font-size: 3rem;
-            color: #f0f0f0;
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
           }
-          .header p {
+          .intro p {
             font-size: 1.2rem;
             margin-bottom: 1.5rem;
           }
@@ -105,21 +139,53 @@ const showIntroPage = async (req, res) => {
             width: 60px;
             height: 60px;
             margin-bottom: 1rem;
+            border-radius: 50%;
+            border: 2px solid #fff;
+          }
+          .crypto-card h3 {
+            margin: 0.5rem 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+          }
+          .crypto-card p {
+            margin: 0.3rem 0;
+            font-size: 0.95rem;
+          }
+          /* Footer */
+          footer {
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            padding: 1rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
           }
         </style>
       </head>
       <body>
+        <!-- Header -->
+        <header>
+          <div class="logo">KryptoX</div>
+          <nav>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Stats</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </nav>
+        </header>
+
+        <!-- Main Content -->
         <div class="container">
-          <div class="header">
-            <h1>Crypto Dashboard</h1>
-            <p>Real-time stats, deviations, and more for your favorite coins</p>
-          </div>
+          <section class="intro">
+            <h1>Welcome to the KryptoX</h1>
+            <p>Get instantly Real-time stats, deviations, and insights on the top cryptocurrencies in the world!</p>
+          </section>
           <div class="search-box">
             <input type="text" id="searchInput" placeholder="Search cryptocurrency..." />
           </div>
           <div class="grid" id="cryptoGrid">
             ${coins.map(coin => {
-              // Use CoinGecko's image; for "matt" (or any coin missing a valid image), use a fallback.
               let logo = coin.image;
               if (coin.id === "matt" || !logo) {
                 logo = "https://via.placeholder.com/60?text=MATT";
@@ -139,6 +205,13 @@ const showIntroPage = async (req, res) => {
             }).join('')}
           </div>
         </div>
+
+        <!-- Footer -->
+        <footer>
+          <p>&copy; ${new Date().getFullYear()} KryptoX. All rights reserved.</p>
+          <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </footer>
+
         <script>
           document.getElementById('searchInput').addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
@@ -166,8 +239,8 @@ const getStats = async (req, res) => {
     }
     const latestData = await Crypto.findOne({ coin }).sort({ timestamp: -1 });
     if (!latestData) {
-      console.error(`No data found for coin: ${coin}`);
-      return res.status(404).json({ error: `No data found for coin: ${coin}` });
+      console.error(`No data found for coin: \${coin}`);
+      return res.status(404).json({ error: `No data found for coin: \${coin}` });
     }
     res.json({
       coin: latestData.coin,
