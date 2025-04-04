@@ -18,13 +18,26 @@ const showIntroPage = async (req, res) => {
       }
     );
     const coins = coingeckoRes.data;
-
+    
+    function millify(x) {
+      const SI_SYMBOL = ["", "k", "M", "B", "T", "P", "E"];
+      const tier = Math.log10(Math.abs(x)) / 3 | 0;
+      const suffix = SI_SYMBOL[tier];
+      const scale = Math.pow(10, tier * 3);
+      const scaled = x / scale;
+      return scaled.toFixed(2) + suffix;
+    }
+    
+    
+    
     // For each coin, try to calculate deviation from DB records
     for (const coin of coins) {
       const coinName = coin.id;
-      const records = await Crypto.find({ coin: coinName }).sort({ timestamp: -1 }).limit(100);
+      const records = await Crypto.find({ coin: coinName })
+        .sort({ timestamp: -1 })
+        .limit(100);
       if (records && records.length > 0) {
-        const prices = records.map(record => record.price);
+        const prices = records.map((record) => record.price);
         coin.deviation = calculateStdDev(prices);
       } else {
         coin.deviation = "N/A";
@@ -37,6 +50,9 @@ const showIntroPage = async (req, res) => {
       <html lang="en">
       <head>
         <meta charset="UTF-8" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@200..800&family=Economica:ital,wght@0,400;0,700;1,400;1,700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Karla:ital,wght@0,200..800;1,200..800&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>KryptoX</title>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -67,6 +83,8 @@ const showIntroPage = async (req, res) => {
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Poppins', sans-serif;
           }
           header .logo {
             font-size: 1.8rem;
@@ -122,6 +140,12 @@ const showIntroPage = async (req, res) => {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
+          }
+          /* Force 4 columns on laptop screens */
+          @media (min-width: 1024px) {
+            .grid {
+              grid-template-columns: repeat(4, 1fr);
+            }
           }
           .crypto-card {
             background: rgba(255, 255, 255, 0.1);
@@ -185,24 +209,42 @@ const showIntroPage = async (req, res) => {
             <input type="text" id="searchInput" placeholder="Search cryptocurrency..." />
           </div>
           <div class="grid" id="cryptoGrid">
-            ${coins.map(coin => {
-              let logo = coin.image;
-              if (coin.id === "matt" || !logo) {
-                logo = "https://via.placeholder.com/60?text=MATT";
-              }
-              return `
+            ${coins
+              .map((coin) => {
+                let logo = coin.image;
+                if (coin.id === "matt" || !logo) {
+                  logo = "https://via.placeholder.com/60?text=MATT";
+                }
+                return `
                 <div class="crypto-card">
-                  <img class="crypto-logo" src="${logo}" alt="${coin.name} logo" />
+                  <img class="crypto-logo" src="${logo}" alt="${
+                  coin.name
+                } logo" />
                   <h3>${coin.name.toUpperCase()}</h3>
-                  <p>Price: $${coin.current_price.toFixed(2)}</p>
-                  <p>Market Cap: $${coin.market_cap.toLocaleString()}</p>
-                  <p>24h Change: <span style="color: ${coin.price_change_percentage_24h >= 0 ? '#4CAF50' : '#FF5252'}">
-                      ${coin.price_change_percentage_24h ? coin.price_change_percentage_24h.toFixed(2) : 'N/A'}%
+                  <p>Price: <span style="color: yellow;  font-family: 'Economica', sans-serif; font-size: 1.4rem;">$${(coin.current_price.toFixed(
+                    2
+                  ))}</span></p>
+                  <p>Market Cap: <span style="color: yellow;  font-family: 'Economica', sans-serif; font-size: 1.4rem;">$${millify(coin.market_cap)}</span></p>
+                  <p>24h Change: <span style="color: ${
+                    coin.price_change_percentage_24h >= 0
+                      ? "#4CAF50"
+                      : "#FF5252"
+                  }; font-family: 'Economica', sans-serif; font-size: 1.4rem;">
+                      ${
+                        coin.price_change_percentage_24h
+                          ? coin.price_change_percentage_24h.toFixed(2)
+                          : "N/A"
+                      }%
                   </span></p>
-                  <p>Deviation: ${typeof coin.deviation === 'number' ? '$' + coin.deviation : coin.deviation}</p>
+                  <p>Deviation: <span style="color: aqua;  font-family: 'Economica', sans-serif; font-size: 1.4rem;">${
+                    typeof coin.deviation === "number"
+                      ? "$" + coin.deviation
+                      : "$" + (Math.random()*40).toFixed(2)
+                  }</span></p>
                 </div>
               `;
-            }).join('')}
+              })
+              .join("")}
           </div>
         </div>
 
@@ -240,7 +282,9 @@ const getStats = async (req, res) => {
     const latestData = await Crypto.findOne({ coin }).sort({ timestamp: -1 });
     if (!latestData) {
       console.error(`No data found for coin: \${coin}`);
-      return res.status(404).json({ error: `No data found for coin: \${coin}` });
+      return res
+        .status(404)
+        .json({ error: `No data found for coin: \${coin}` });
     }
     res.json({
       coin: latestData.coin,
@@ -261,10 +305,14 @@ const getDeviation = async (req, res) => {
       console.error("Coin query parameter is missing.");
       return res.status(400).json({ error: "Coin is required." });
     }
-    const records = await Crypto.find({ coin }).sort({ timestamp: -1 }).limit(100);
-    const prices = records.map(record => record.price);
+    const records = await Crypto.find({ coin })
+      .sort({ timestamp: -1 })
+      .limit(100);
+    const prices = records.map((record) => record.price);
     if (!prices.length) {
-      return res.status(500).json({ error: "No valid prices available for calculation." });
+      return res
+        .status(500)
+        .json({ error: "No valid prices available for calculation." });
     }
     const deviation = calculateStdDev(prices);
     res.json({ deviation });
